@@ -15,59 +15,51 @@ then
   exit
 fi
 
-# [TASK 1]
+# [TASK 1] set variables to command arguments
 targetDirectory=$1
 destinationDirectory=$2
 
-# [TASK 2]
+# [TASK 2] print directory paths to user
 echo "The target directory is $targetDirectory"
 echo "The destination directory is $destinationDirectory"
 
-# [TASK 3]
+# [TASK 3] set currentTS variable to current timestamp, in seconds
 currentTS=`date +%s`
 
-# [TASK 4]
+# [TASK 4] set backupFileName using timestamp
 backupFileName="backup-$currentTS.tar.gz"
 
-# We're going to:
-  # 1: Go into the target directory
-  # 2: Create the backup file
-  # 3: Move the backup file to the destination directory
-
-# To make things easier, we will define some useful variables...
-
-# [TASK 5]
+# [TASK 5] define origAbsPath directory
 origAbsPath=`pwd`
 
-# [TASK 6]
+# [TASK 6] define destAbsPath directory
 cd $destinationDirectory
 destAbsPath=`pwd`
 
-# [TASK 7]
+# [TASK 7] change cwd to target directory
 cd $origAbsPath
 cd $targetDirectory
 
-# [TASK 8]
+# [TASK 8]  set yesterdayTS to 24 hours before currentTS
 yesterdayTS=$(($currentTS - 24 * 60 * 60))
 
 declare -a toBackup
 
-for file in $(ls) # [TASK 9]
+for file in $(ls) # [TASK 9] list all files and directories
 do
-  # [TASK 10]
+  # [TASK 10] check if file was updated in the past 24 hours
   if ((`date -r $file +%s` > $yesterdayTS))
   then 
-    # [TASK 11]
+    # [TASK 11] add the name of files updated within last 24 hours to the toBackup array
     toBackup+=($file)
   fi
 done
 
-# [TASK 12]
+# [TASK 12] create archived and compressed backup file containing all files in toBackup
 
 tar -czvf $backupFileName ${toBackup[@]}
 
-# [TASK 13]
+# [TASK 13] move the backup file to destination directory
 
 mv $backupFileName $destAbsPath
 
-# Congratulations! You completed the final project for this course!
